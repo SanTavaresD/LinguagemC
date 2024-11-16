@@ -45,7 +45,7 @@ void inserirJogador(statusJogador** inicio, char nome[], int camisa, char cartao
 
 
 // 2 - Remoção de Elementos: Implemente uma função que remova um nó específico da lista, dado seu valor
-void removeJogador(statusJogador** inicio){
+void removeJogadorPunido(statusJogador** inicio){
     if (*inicio == NULL){
         printf("Sem jogador em campo!");
     } else {
@@ -60,6 +60,19 @@ void removeJogador(statusJogador** inicio){
         }
     }
 }
+
+void removeJogador(statusJogador** inicio){
+    if(*inicio == NULL){
+        printf("Sem jogador em campo!");
+    } else {
+        statusJogador* temp = *inicio;
+        while (inicio != NULL){
+            free(temp);
+            temp = temp -> prox;
+        }
+    }
+}
+
 
 // 3 - Tamanho da Lista: Crie uma função que conte o número de nós em uma lista encadeada.
 int jogadoresEmCampo(statusJogador** inicio){
@@ -103,32 +116,22 @@ void buscaJogador(statusJogador* inicio, char nome[50], int camisa, int time){
 }
 
 // 5 - Substituir em Lista Encadeada: Implemente uma função que substitua um valor na lista encadeada 
-void substiuirJogador(statusJogador** inicio, buscaJogadors* pesquisa, char nomeSair[50], int camisaSair, int timeSair, char nomeEntra[50], int camisaEntra, int timeEntra, char cartaoEntra[50]) {
+void substiuirJogador(statusJogador** inicio, char nomeSair[50], int camisaSair, int timeSair, char nomeEntra[50], int camisaEntra, int timeEntra, char cartaoEntra[50]) {
     if (inicio == NULL){
         printf("Sem jogadores em campo!\n");
     } else {
-        buscaJogador(*inicio, nomeSair, camisaSair, timeSair);
-        buscaJogadors* sair = pesquisa;
-        statusJogador* entra = *inicio;
-        statusJogador* anterior = NULL;
     
         if (timeSair == timeEntra){
             printf("\nSubstituicao no time %d\n", timeEntra);
-            printf("Saindo o jogador %s camisa %d", nomeSair, camisaSair);
-            while (entra != NULL){
-                if(strcmp(sair -> nome, nomeSair) == 0 && sair -> camisa == camisaSair){
-                    if (anterior == NULL) {
-                        *inicio = entra->prox;
-                    } else {
-                        anterior -> prox = entra -> prox;
-                    }
-                    free(entra);
-                    free(sair);
-                    sair = sair -> prox;
+            
+            statusJogador* temp = *inicio;
+
+            while (*inicio != NULL){
+                if(strcmp(temp -> nome, nomeSair) == 0 && temp -> camisa == camisaSair){
+                    printf("Saindo o jogador %s camisa %d", nomeSair, camisaSair);
+                    free(temp);
+                    temp = temp -> prox;
                 }
-                anterior = entra;
-                entra = entra -> prox;
-                
                 
             }
             printf("\nEntrando o jogador %s camisa %d", nomeEntra ,camisaEntra);
@@ -173,7 +176,7 @@ int main () {
                 inserirJogador(&inicio, nome, camisa, cartao, time);
                 break;
             case 2:
-                removeJogador(&inicio);
+                removeJogadorPunido(&inicio);
                 break;
             case 3:
                 printf("Numeros de jogadores em campo: %d", jogadoresEmCampo(&inicio));
@@ -186,7 +189,7 @@ int main () {
                 printf("Time do jogador a ser pesquisado: ");
                 scanf("%d", &timePesquisa);
                 buscaJogador(inicio, nomePesquisa, camisaPesquisa, timePesquisa);
-                buscaJogadors* pesquisa = NULL;
+                //buscaJogadors* pesquisa = NULL;
                 break;
             case 5:
                 printf("Time: ");
@@ -204,7 +207,7 @@ int main () {
                 printf("Cartao do jogador a entrar: ");
                 scanf("%s", cartaoEntra);
 
-                substiuirJogador(&inicio, pesquisa, nomeSair, camisaSair, timeSubs, nomeEntra, camisaEntra, timeSubs, cartaoEntra);
+                substiuirJogador(&inicio, nomeSair, camisaSair, timeSubs, nomeEntra, camisaEntra, timeSubs, cartaoEntra);
                 break;
             case 6:
                 mostrarCampo(inicio);
